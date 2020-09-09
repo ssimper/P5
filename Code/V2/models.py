@@ -2,13 +2,13 @@
 
 class Category:
 
-	def __init__(self, id, name=None):
+	def __init__(self, name, id=None):
 		self.id = id
 		self.name = name
 
 class Nutriscore:
 
-	def __init__(self, id, name=None):
+	def __init__(self, name, id=None):
 		self.id = id
 		self.name = name
 
