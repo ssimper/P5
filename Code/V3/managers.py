@@ -20,7 +20,7 @@ class ProductManager:
 		cursor = cnx.cursor()
 		query01 = """
 			SELECT
-    		    product.name,nutriscore.name as nutriscore
+    		    DISTINCT product.name,nutriscore.name as nutriscore
     		FROM
     		    product
     		INNER JOIN
@@ -65,7 +65,7 @@ class ProductManager:
 		cursor = cnx.cursor()
 		query01 = """
 			SELECT
-				product.name,nutriscore.name as nutriscore
+				DISTINCT product.name,nutriscore.name as nutriscore
 			FROM
 				product
 			INNER JOIN
@@ -100,7 +100,7 @@ class ProductManager:
 		cursor = cnx.cursor()
 		query01 = """
 			SELECT
-				category.name
+				DISTINCT category.name
 			FROM
 				category
 			INNER JOIN
