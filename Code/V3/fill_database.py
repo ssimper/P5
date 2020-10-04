@@ -19,7 +19,7 @@ cnx = mysql.connector.connect(
 	user='simper',
 	password='eugostodomysql',
 	host='localhost',
-	database='off_test',
+	database='off_test2',
 	charset='utf8'
 	)
 
@@ -79,7 +79,7 @@ for i, product in enumerate(products):
 		cursor.execute(
 			"""
 			INSERT INTO
-		    	product (bar_code, name, nutriscore_id)
+		    	product (bar_code, name, nutriscore_id, url)
 			VALUES
 		    	(
 		    		%(bar_code)s,
@@ -87,13 +87,15 @@ for i, product in enumerate(products):
 		    		(
 		    	    	SELECT id FROM nutriscore
 		    	    	WHERE name = %(score)s
-		    		)
+		    		),
+		    		%(url)s
 		    	)
 			""",
 			{
 				"bar_code": product['code'],
 				"name": product['product_name_fr'],
-				"score": product['nutrition_grades']
+				"score": product['nutrition_grades'],
+				"url": product['url']
 			}
 		)
 		cnx.commit()
@@ -175,6 +177,7 @@ for i, product in enumerate(products):
 			}
 			)
 		cnx.commit()
+		
 		"""product_category association"""
 		cursor.execute(
             """

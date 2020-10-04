@@ -21,17 +21,13 @@ class Interface:
 				)
 			if choice == '1':
 				self.prod_manage.get_all_categories()
-				#for category in self.prod_manage.list_categories:
-				#	print(category)
-				#Display results in 5 columns
-				for a,b,c,d,e in zip(
-					self.prod_manage.list_categories[::5],
-					self.prod_manage.list_categories[1::5],
-					self.prod_manage.list_categories[2::5],
-					self.prod_manage.list_categories[3::5],
-					self.prod_manage.list_categories[4::5]
-					):
-					print ('{:>30}{:>30}{:>30}{:>30}{:>30}'.format(a,b,c,d,e))
+				for category in self.prod_manage.list_categories:
+					print(
+						colored(category[0], 'green'),
+						category[1],
+						sep= ' : ',
+						end=' | '
+						)
 			elif choice == '2':
 				answer = input("Quelle catégorie ?")
 				self.prod_manage.get_products_by_category(answer)

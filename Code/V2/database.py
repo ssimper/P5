@@ -9,6 +9,6 @@ cnx = mysql.connector.connect(
 	charset='utf8'
 	)
 
-cursor = cnx.cursor()
+
 
 db = records.Database("mysql://simper:eugostodomysql@localhost/off_test")

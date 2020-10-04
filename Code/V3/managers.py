@@ -4,6 +4,7 @@ from database import db, cnx
 class ProductManager:
 
 	def __init__(self):
+		self.dict_categories = dict()
 		self.list_categories = list()
 		self.list_products_category = list()
 		self.list_products = list()
@@ -54,18 +55,34 @@ class ProductManager:
 			"""
 			)
 		results = cursor.fetchall()
-		#Cleaning the list
 		self.list_categories = []
-		#Filling self.list_categories with values
-		for result in results:
-			self.list_categories.append(result[1])
+		for i, result in enumerate(results, start = 1):
+			self.list_categories.append((i, result[1]))
 		return self.list_categories
+
+
+	def get_all_products(self):
+		cursor = cnx.cursor()
+		cursor.execute(
+			"""
+			SELECT
+				name
+			FROM
+				product
+			"""
+			)
+		results = cursor.fetchall()
+		self.list_products = []
+		for i, result in enumerate(results, start = 1):
+			self.list_products.append((i, result))
+		return self.list_products
+
 
 	def get_products_by_category(self, category): #retourne tous les produits par rapport à une catégorie
 		cursor = cnx.cursor()
 		query01 = """
 			SELECT
-				DISTINCT product.name,nutriscore.name as nutriscore
+				DISTINCT product.name,product.bar_code,nutriscore.name as nutriscore
 			FROM
 				product
 			INNER JOIN
@@ -92,8 +109,8 @@ class ProductManager:
 		#Cleaning the list
 		self.list_products_category = []
 		#Filling the list
-		for result in results:
-			self.list_products_category.append((result[0], result[1]))
+		for i, result in enumerate(results, start = 1):
+			self.list_products_category.append((i, (result[0], result[1], result[2])))
 		return self.list_products_category
 
 	def get_all_categories_by_product(self, product):
