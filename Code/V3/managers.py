@@ -78,6 +78,52 @@ class ProductManager:
 		return self.list_products
 
 
+	def get_products_category_like_by_bar_code(self, brezel):
+		cursor = cnx.cursor()
+		query03 = """
+			SELECT
+				product_bar_code,
+				product.name,
+				COUNT(category_id) AS nombre_categorie
+			FROM
+				product_category
+			INNER JOIN
+				product
+			ON
+				product_category.product_bar_code = product.bar_code
+			WHERE
+				product_bar_code != %s
+			AND
+				category_id
+			IN
+				(
+				SELECT
+					category_id
+				FROM
+					product_category
+				WHERE
+					product_bar_code = %s
+				)
+			GROUP BY
+				product_bar_code
+			ORDER BY
+				nombre_categorie
+			DESC LIMIT 6;
+			"""
+		p = brezel
+		print(p)
+		#cursor.execute(query03)
+		cursor.execute(query03, (p,p))
+		results = cursor.fetchall()
+		#cleaning the list
+		self.list_prod_cat_bar = []
+		#Filing the list
+		for result in results:
+			self.list_prod_cat_bar.append((result[0], result[1], result[2]))
+		return self.list_prod_cat_bar
+
+		pass
+
 	def get_products_by_category(self, category): #retourne tous les produits par rapport à une catégorie
 		cursor = cnx.cursor()
 		query01 = """
