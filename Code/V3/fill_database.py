@@ -19,7 +19,7 @@ cnx = mysql.connector.connect(
 	user='simper',
 	password='eugostodomysql',
 	host='localhost',
-	database='off_test2',
+	database='off_test3',
 	charset='utf8'
 	)
 
@@ -51,9 +51,9 @@ deleted_product = 0
 
 """Filling the database."""
 for i, product in enumerate(products):
-	"""Verification of the existence of nutriscore. If exists it is put in the
+	"""Verification of the existence of nutriscore and generic_name_fr. If exists it is put in the
 	database else it is removed."""
-	if 'nutrition_grades' in product:
+	if 'nutrition_grades' in product and 'generic_name_fr' in product:
 		cursor.execute(
 			"""
 			INSERT INTO
@@ -74,16 +74,18 @@ for i, product in enumerate(products):
 		print(f"Traitement du produit n°{i}",
 			"code :", product['code'],
 			"nom :", product['product_name_fr'],
+			"description", product['generic_name_fr'],
 			"nutriscore :", product['nutrition_grades']
 			)
 		cursor.execute(
 			"""
 			INSERT INTO
-		    	product (bar_code, name, nutriscore_id, url)
+		    	product (bar_code, name, description, nutriscore_id, url)
 			VALUES
 		    	(
 		    		%(bar_code)s,
 		    		%(name)s,
+		    		%(description)s,
 		    		(
 		    	    	SELECT id FROM nutriscore
 		    	    	WHERE name = %(score)s
@@ -94,6 +96,7 @@ for i, product in enumerate(products):
 			{
 				"bar_code": product['code'],
 				"name": product['product_name_fr'],
+				"description": product['generic_name_fr'],
 				"score": product['nutrition_grades'],
 				"url": product['url']
 			}

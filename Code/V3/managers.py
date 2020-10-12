@@ -9,6 +9,11 @@ class ProductManager:
 		self.list_products_category = list()
 		self.list_products = list()
 		self.list_categories_product = list()
+		self.set_classified_categories = set()
+		self.list_classified_categories = list()
+		self.list_sub_categories = list()
+		self.list_enumerated_categories = list()
+		self.list_description = list()
 
 	def save_product(self, product):
 		pass
@@ -42,6 +47,135 @@ class ProductManager:
 		for result in results:
 			self.list_products.append((result[0], result[1]))
 		return self.list_products
+
+
+	def get_product_description(self, bar_code):
+		"""Find all information the customer needs about his new product"""
+		cursor = cnx.cursor()
+		query01 = """
+			SELECT
+				DISTINCT
+					product.name,
+					nutriscore.name,
+					product.description,
+					product.url
+			FROM
+				product
+			INNER JOIN
+				nutriscore
+			ON
+				product.nutriscore_id = nutriscore.id
+			INNER JOIN
+				product_category
+			ON
+				product.bar_code = product_category.product_bar_code
+			INNER JOIN
+				category
+			ON
+				product_category.category_id = category.id
+			WHERE
+				product.bar_code = %s
+			"""
+		p = bar_code
+		cursor.execute(query01, (p,))
+		results = cursor.fetchall()
+		self.list_description = []
+		self.list_description = results
+		return self.list_description
+
+
+	def get_product_stores(self, bar_code):
+		"""Find the store where the product is referenced. We need the 
+		store id for saving the product."""
+		cursor = cnx.cursor()
+		query01 = """
+			SELECT
+				store.name, store.id
+			From
+				store
+			INNER JOIN
+				product_store
+			ON
+				store.id = product_store.store_id
+			WHERE
+				product_store.product_bar_code = %s
+		"""
+		p = bar_code
+		cursor.execute(query01, (p,))
+		results = cursor.fetchall()
+		#List with store name and store id
+		self.list_stores_tuples = []
+		#List with just store name
+		self.list_stores = []
+		self.list_stores_tuples = results
+		#Put store name in self.list_store from self.list_stores_tuples
+		for i, store in enumerate(self.list_stores_tuples):
+			self.list_stores.append(self.list_stores_tuples[i][0])
+		return self.list_stores
+		pass
+		
+
+
+	def classify_categories(self):
+		"""Get all items from 'category' tables, add the tuple to the
+		collection if its second element hasn't the first fourth caracters
+		in common with tuple(s) allready in the collection. Finally put all 
+		those items in a list ordered and numbered."""
+		cursor = cnx.cursor()
+		cursor.execute(
+			"""
+			SELECT
+				*
+			FROM
+				category
+			"""
+			)
+		results = cursor.fetchall()
+		self.list_categories = []
+		#Put the result of the query in a list.
+		for result in results:
+			#category with the same fourth first caracters are not added
+			item_in = [item
+				for item in self.list_categories
+				if result[1][:4] in item[1][:4]
+				]
+			if item_in != []:
+				continue
+			else:
+				self.list_categories.append(result)
+		#Extract the first word of the second element of the list of tuple
+		#and put it in a set to avoid duplicates 
+		for i, element in enumerate(self.list_categories):
+			self.set_classified_categories.add(
+				(self.list_categories[i][1].split(" "))[0]
+				)
+		#Browse the collection in ordered way and put its items in a numerate 
+		#list
+		for i, category in enumerate(
+			sorted(self.set_classified_categories), start = 1
+			):
+			self.list_enumerated_categories.append((i, category))
+		return self.list_enumerated_categories
+
+
+	def get_subcategories_from_categories(self, category):
+		"""Get categories which names start like the sub-category name"""
+		cursor = cnx.cursor()
+		query01 = """
+			SELECT
+				*
+			FROM
+				category
+			WHERE
+				name LIKE CONCAT (%s, '%')
+			"""
+		p = category
+		cursor.execute(query01, (p,))
+		results = cursor.fetchall()
+		self.list_subcategories = []
+		for i, result in enumerate(results, start = 1):
+			self.list_subcategories.append((i, result[1]))
+		return self.list_subcategories
 
 
 	def get_all_categories(self):
@@ -78,12 +212,15 @@ class ProductManager:
 		return self.list_products
 
 
-	def get_products_category_like_by_bar_code(self, brezel):
+	def get_products_category_like_by_bar_code(self, bar_code):
+		"""Find the products that have the most category in common
+		with the initial product."""
 		cursor = cnx.cursor()
 		query03 = """
 			SELECT
 				product_bar_code,
 				product.name,
+				nutriscore.name,
 				COUNT(category_id) AS nombre_categorie
 			FROM
 				product_category
@@ -91,6 +228,10 @@ class ProductManager:
 				product
 			ON
 				product_category.product_bar_code = product.bar_code
+			INNER JOIN
+				nutriscore
+			ON
+				product.nutriscore_id = nutriscore.id
 			WHERE
 				product_bar_code != %s
 			AND
@@ -110,21 +251,28 @@ class ProductManager:
 				nombre_categorie
 			DESC LIMIT 6;
 			"""
-		p = brezel
+		p = bar_code
 		print(p)
-		#cursor.execute(query03)
 		cursor.execute(query03, (p,p))
 		results = cursor.fetchall()
 		#cleaning the list
 		self.list_prod_cat_bar = []
 		#Filing the list
-		for result in results:
-			self.list_prod_cat_bar.append((result[0], result[1], result[2]))
+		for i, result in enumerate(results, start = 1):
+			self.list_prod_cat_bar.append(
+				(i, 
+				result[0],
+				result[1],
+				result[2],
+				result[3]
+				)
+			)
 		return self.list_prod_cat_bar
 
 		pass
 
-	def get_products_by_category(self, category): #retourne tous les produits par rapport à une catégorie
+	def get_products_by_category(self, category):
+		"""Find all products in relation with a category"""
 		cursor = cnx.cursor()
 		query01 = """
 			SELECT

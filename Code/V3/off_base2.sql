@@ -71,6 +71,7 @@ DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
   `bar_code` bigint NOT NULL,
   `name` varchar(150) DEFAULT NULL,
+  `description` varchar(200) DEFAULT NULL,
   `nutriscore_id` smallint unsigned NOT NULL,
   `url` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`bar_code`),

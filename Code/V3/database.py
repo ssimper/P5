@@ -5,7 +5,7 @@ cnx = mysql.connector.connect(
 	user='simper',
 	password='eugostodomysql',
 	host='localhost',
-	database='off_test2',
+	database='off_test3',
 	charset='utf8'
 	)
 

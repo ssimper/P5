@@ -38,7 +38,7 @@ class TheMenu:
 
 	def product_replace(self):
 		print(
-			colored("Vous souahitez remplacer un aliment.\n", 'yellow') +
+			colored("Vous souhaitez remplacer un aliment.\n", 'yellow') +
 			colored("1", 'red') +
 			" - Sélectionnez la catégorie\n" +
 			colored("2", 'red') +
@@ -54,38 +54,69 @@ class TheMenu:
 
 
 	def display_categories(self):
-		#Display all categories
-		#First : call 'get_all_categories' from managers
-		all_categories = self.prod_manage.get_all_categories()
-		#managers return the list of categories 'list_categories'
-		for category in all_categories:
+		enumerated_categories = self.prod_manage.classify_categories()
+		for a, b, c, d, e in zip(
+			enumerated_categories[::5],
+			enumerated_categories[1::5],
+			enumerated_categories[2::5],
+			enumerated_categories[3::5],
+			enumerated_categories[4::5]
+			):
 			print(
-				colored(category[0], 'green'),
-				category[1],
-				sep = ' : ',
-				end =' | '
+				colored(a[0], 'green'), a[1],
+				colored(b[0], 'green'), b[1],
+				colored(c[0], 'green'), c[1],
+				colored(d[0], 'green'), d[1],
+				colored(e[0], 'green'), e[1]
 				)
 		try:
 			#We want an integer !!!
-			answer = int(input("Saisissez le numéro de la catégorie : "))
+			answer = int(input(
+				"\nSaisissez le numéro de la catégorie pour afficher" +
+				" les sous-catégories : "
+				)
+			)
 		except ValueError:
 			print("Saisie incorrecte !")
-			self.display_categories()
+			return self.display_categories
 		else:
-			test = [item for item in all_categories if item[0] == answer]
+			test = [
+				item for item in enumerated_categories if item[0] == answer
+				]
 			if test != []:
-				self.products_from_selected_category(answer)
+				self.display_subcategories(answer)
 			else:
-				self.display_categories()
+				print("Le numéro n'est pas dans la liste !")
+				return self.display_subcategories
+	
 
 
-	def products_from_selected_category(self, category):
+	def display_subcategories(self, category):
+		#find the category name from the number answered
+		quest = self.prod_manage.classify_categories()[(category-1)][1]
+		print(f"\nLes sous-catégory de {quest} sont :")
+		self.prod_manage.get_subcategories_from_categories(quest)
+		list_cat = self.prod_manage.list_subcategories
+		for cat in list_cat:
+			print(
+				colored(cat[0], 'green'),
+				cat[1],
+				sep = ' : ',
+				end = ' | '
+				)
+		print("\n\nDe quelle sous-catégorie souhaitez-vous extraire " +
+			"les produits ?")
+		answer = int(input("Votre choix : "))
+		self.products_from_selected_subcategory(answer, category)
+
+
+	def products_from_selected_subcategory(self, subcategory, category):
 		#Second : sort the product name from the answer
-		quest = self.prod_manage.list_categories[(category-1)][1]
+		quest = self.prod_manage.list_subcategories[(subcategory-1)][1]
+		print(f"Les produits associés à la sous-catégorie {quest} sont :")
 		#Third : call 'get_products_by_category' with quest parameter
 		self.prod_manage.get_products_by_category(quest)
 		#managers return  the list of products 'list_products'
-		print(self.prod_manage.list_products_category)
 		for result in self.prod_manage.list_products_category:
 			print(
 				colored(result[0], 'green'),
@@ -98,14 +129,18 @@ class TheMenu:
 			colored("1", 'red') +
 			" - Sélectionne une autre catégorie ?\n" +
 			colored("2", 'red') +
-			" - Sélectionnez l'aliment à substituer\n" +
+			" - Sélectionne une autre sous-catégorie ?\n" +
 			colored("3", 'red') +
+			" - Sélectionnez l'aliment à substituer\n" +
+			colored("4", 'red') +
 			" - Retour au menu principal"
 			)
 		answer = input("Votre choix : ")
 		if answer == "1":
-			self.display_categories()
+			return self.display_categories
 		elif answer == "2":
+			return self.display_subcategories(category)
+		elif answer == "3":
 			cat_number = int(input("\nSaisissez le numéro du produit : "))
 			self.product_substitution(cat_number)
 		else:
@@ -113,16 +148,40 @@ class TheMenu:
 
 
 	def product_substitution(self, cat_number):
+		#Find the product bar-code from the list 'list_producs_category'
 		quest = self.prod_manage.list_products_category[(cat_number-1)][1][1]
+		print("Ma quête : ", quest)
 		self.prod_manage.get_products_category_like_by_bar_code(quest)
 		print("Le top 6 des aliments partageant le plus de categories :\n")
 		for result in self.prod_manage.list_prod_cat_bar:
 			print(
-				colored(result[1], 'green'),
+				result[0],
+				colored(result[2], 'green'),
 				"de score : ",
-				colored(result[2], 'green')
+				colored(result[3], 'green')
 				)
-		self.product_replace()
+		answer = int(input(
+			"Entrez le numéro du produit que vous souhaitez conserver : ")
+			)
+		quest = self.prod_manage.list_prod_cat_bar[(answer-1)][1]
+		print("Hey ! ", quest)
+		self.prod_manage.get_product_description(quest)
+		self.prod_manage.get_product_stores(quest)
+		info_product = self.prod_manage.list_description
+		stores_product = ", ".join(self.prod_manage.list_stores)
+		print(
+			"Détails du produit sélectionné :\n" +
+			info_product[0][0], "\n" +
+			"Score : ", info_product[0][1], "\n" +
+			"Description du produit :", info_product[0][2], "\n" +
+			"Url d'accès au produit : ", info_product[0][3]
+			)
+		print(
+			"Ce produit est disponible dans les magasins suivants :\n" +
+			stores_product
+			)
+		answer = input("Sauvegarder (o/n)")
+
 
 
 	def products(self):
