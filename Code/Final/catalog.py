@@ -56,19 +56,21 @@ class TheMenu:
 	def display_categories(self):
 		enumerated_categories = []
 		enumerated_categories = self.prod_manage.classify_categories()
-		for a, b, c, d, e in zip(
-			enumerated_categories[::5],
-			enumerated_categories[1::5],
-			enumerated_categories[2::5],
-			enumerated_categories[3::5],
-			enumerated_categories[4::5]
+		for a, b, c, d, e, f in zip(
+			enumerated_categories[::6],
+			enumerated_categories[1::6],
+			enumerated_categories[2::6],
+			enumerated_categories[3::6],
+			enumerated_categories[4::6],
+			enumerated_categories[5::6]
 			):
 			print(
 				colored(a[0], 'green'), a[1],
 				colored(b[0], 'green'), b[1],
 				colored(c[0], 'green'), c[1],
 				colored(d[0], 'green'), d[1],
-				colored(e[0], 'green'), e[1]
+				colored(e[0], 'green'), e[1],
+				colored(f[0], 'green'), f[1]
 				)
 		try:
 			#We want an integer !!!
