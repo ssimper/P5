@@ -104,7 +104,7 @@ CREATE TABLE `stored_product` (
   KEY `fk_original_bar_code` (`original_bar_code`),
   KEY `fk_substitution_bar_code` (`substitution_bar_code`), 
   CONSTRAINT `fk_original_bar_code` FOREIGN KEY (`original_bar_code`) REFERENCES `product` (`bar_code`),
-  CONSTRAINT `substitution_bar_code` FOREIGN KEY (`substitution_bar_code`) REFERENCES `product` (`bar_code`)
+  CONSTRAINT `fk_substitution_bar_code` FOREIGN KEY (`substitution_bar_code`) REFERENCES `product` (`bar_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
