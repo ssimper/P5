@@ -17,6 +17,7 @@ class TheMenu:
             self.next = self.next()
 
     def accueil(self):
+        #Start menu
         print(
             colored("Accueil\n", 'yellow') +
             colored("1", 'red') +
@@ -53,6 +54,8 @@ class TheMenu:
             return self.product_replace
 
     def display_categories(self):
+        """Here we use 'zip' ton organize the display of the results
+        in 8 columns"""
         enumerated_categories = []
         enumerated_categories = self.prod_manage.classify_categories()
         for a, b, c, d, e, f, g, h in zip(
@@ -138,17 +141,16 @@ class TheMenu:
                 return self.display_subcategories
 
     def products_from_selected_subcategory(self):
-        # Second : sort the product name from the answer
+        # sort the product name from the answer
         quest = self.prod_manage.list_subcategories[(
             self.last_sub_category_number-1
         )][1]
-        # print(f"Les produits associés à la sous-catégorie {quest} sont :")
         print(
             "Les produits associés à la sous-catégorie",
             colored(quest, 'yellow'),
             "sont :"
         )
-        # Third : call 'get_products_by_category' with quest parameter
+        # call 'get_products_by_category' with quest parameter
         self.prod_manage.get_products_by_category(quest)
         # managers return  the list of products 'list_products'
         for result in self.prod_manage.list_products_category:
