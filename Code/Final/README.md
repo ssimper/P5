@@ -1,4 +1,4 @@
-## OpenClassRooms, projet 3 : "Utilisez les données publiques de l'OpenFoodFacts".
+## OpenClassRooms, projet 5 : "Utilisez les données publiques de l'OpenFoodFacts".
 
 L'exécution du programme suppose que Python 3 et pipenv sont installés sur votre ordinateur.
 
@@ -14,6 +14,7 @@ L'exécution du programme nécessite les bibliothèques suivantes :
 - termcolor
 - colorama
 - mysql-connector-python
+
 Si vous utilisez pipenv il faut:
 * se placer dans le dossier 
 * placer la commande 'pipenv install nom_de_la_biliothèque'
@@ -23,6 +24,7 @@ Pour exécuter le programme : `python3 catalog.py`
 
 
 **Le programme.**
+
 Sélectionnez une catégorie puis une sous-catégorie et enfin le produit à substituer.
 Si un des substitut proposé vous convient, enregistrez-le !
 Vous pourrez ensuite consulter vos produits sauvegardés. 
@@ -36,11 +38,13 @@ Download those files :
 - database.py (database informations and credentials)
 - fill_database.py (database filling with OpenFooFacts datas)
 - managers.py (MySQL requests)
-- off_base.sql (MySQL database structur)
+- off_base.sql (MySQL database structure)
+
 Program execution requires the following libraries :
 - requests
 - termcolor
 - colorama
+
 If you use pipenv you must:
 * enter the folder
 * place the command 'pipenv install library_name'
@@ -50,6 +54,7 @@ To run the program : `python3 catalog.py`
 
 
 **The program.**
+
 Select a category then a subcategory and finally the product to be substituted.
 If one of the proposed substitutes suits you, save it!
 You can then view your saved products.
