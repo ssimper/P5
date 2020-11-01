@@ -320,6 +320,7 @@ class ProductManager:
                 original_product_description = info_product[0][2]
             original_product_score = info_product[0][1]
             original_product_url = info_product[0][3]
+            # Find substitutes for this orginial product
             cursor = cnx.cursor()
             query03 = """
                 SELECT substitution_bar_code
@@ -330,7 +331,7 @@ class ProductManager:
             cursor.execute(query03, (p,))
             results03 = cursor.fetchall()
             cursor.close()
-            # find the substitutes for the current product
+            # Store substitutes in a list
             for result03 in results03:
                 self.get_product_description(result03[0])
                 info_substitute = self.list_description
@@ -349,6 +350,7 @@ class ProductManager:
                         substitute_product_url
                     )
                 )
+            # Join the original product and its substitutes
             self.list_saved_product.append((
                 (
                     original_product_name,
