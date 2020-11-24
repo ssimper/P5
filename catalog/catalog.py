@@ -3,6 +3,7 @@
 from termcolor import colored
 import colorama
 
+import config
 from .managers import ProductManager
 
 colorama.init()
@@ -67,28 +68,13 @@ class TheMenu:
         """Method responsible for displaying the chosen categories"""
         #Here we use 'zip' ton organize the display of the results
         #in 8 columns
-        enumerated_categories = []
         enumerated_categories = self.prod_manage.classify_categories()
-        for a, b, c, d, e, f, g, h in zip(
-                enumerated_categories[::8],
-                enumerated_categories[1::8],
-                enumerated_categories[2::8],
-                enumerated_categories[3::8],
-                enumerated_categories[4::8],
-                enumerated_categories[5::8],
-                enumerated_categories[6::8],
-                enumerated_categories[7::8]
-        ):
+        for i, category in enumerated_categories:
             print(
-                colored(a[0], 'green'), a[1],
-                colored(b[0], 'green'), b[1],
-                colored(c[0], 'green'), c[1],
-                colored(d[0], 'green'), d[1],
-                colored(e[0], 'green'), e[1],
-                colored(f[0], 'green'), f[1],
-                colored(g[0], 'green'), g[1],
-                colored(h[0], 'green'), h[1]
+                colored(i, "green"), category,
+                end=" " if i % 8 else "\n"
             )
+       
         # We check the answer
         try:
             # We want an integer !!!
