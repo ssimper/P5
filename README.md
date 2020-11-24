@@ -2,26 +2,16 @@
 
 L'exécution du programme suppose que Python 3 et pipenv sont installés sur votre ordinateur.
 
-Téléchargez les fichiers 
-- catalog.py (menu du programme qui doit être lancé en premier)
-- database.py (informations de connexion à la base)
-- fill_database.py (programme d'insertion des données de l'OpenFoodFacts dans la base MySQL)
-- managers.py (ensemble des requêtes)
-- off_base.sql (structure de la base MySQL)
-
-L'exécution du programme nécessite les bibliothèques suivantes :
-- requests
-- termcolor
-- colorama
-- mysql-connector-python
-
-Si vous utilisez pipenv il faut:
-* se placer dans le dossier 
-* placer la commande 'pipenv install nom_de_la_biliothèque'
-* puis la commande 'pipenv shell'
-
-Pour exécuter le programme : `python3 catalog.py`
-
+Téléchargez les fichiers ici : https://github.com/ssimper/P5/archive/master.zip
+- dezippez l'archive 'P5-master.zip'
+- Entrez dans le dossier P5-master
+- créez une base données dans MySQL : CREATE DATABASE IF NOT EXISTS nom-de-votre-base CHARACTER SET 'utf8mb4' COLLATE ‘utf8mb4_unicode_ci’;
+- créez un utilisateur pour cette base de données et placez vous dans votre base de données
+- lancez la commande 'USE off_base.sql' pour construire la structure de la base de données
+- modifiez les informations du fichier config.py pour qu'elles correspondent à votre base (database, utilisateur, mot de passe)
+- éxécutez la commande 'pipenv install' pour paramétrer l'environnement 
+- lancez la commande 'python install.py'pour injecter un échantillon de données depuis OpenFoodFacts dans votre base de données.
+- démarrez le programme avec la commande python -m catalog
 
 **Le programme.**
 
@@ -33,24 +23,16 @@ Vous pourrez ensuite consulter vos produits sauvegardés.
 *English version.*
 
 Program execution assumes that Python 3 and pipenv are installed on your computer.
-Download those files :
-- catalog.py (the menu, first file to launch)
-- database.py (database informations and credentials)
-- fill_database.py (database filling with OpenFooFacts datas)
-- managers.py (MySQL requests)
-- off_base.sql (MySQL database structure)
-
-Program execution requires the following libraries :
-- requests
-- termcolor
-- colorama
-
-If you use pipenv you must:
-* enter the folder
-* place the command 'pipenv install library_name'
-* then the command 'pipenv shell'
-
-To run the program : `python3 catalog.py`
+Download the files from here : https://github.com/ssimper/P5/archive/master.zip
+- unzip 'P5-master.zip'
+- enter the folder 'P5-master'
+- create a MySQL database with the command : CREATE DATABASE IF NOT EXISTS nom-de-votre-base CHARACTER SET 'utf8mb4' COLLATE ‘utf8mb4_unicode_ci’;
+- create an user for this database and enter the database
+- build the structure of the database with this command : USE off_base.sql
+- modify the file config.py with your informations (database, user, password)
+- execute 'pipenv install' to configure your environment
+- execute 'python install.py' to populate your database with a sample of data from OpenFoodFacts
+- run the program with the command: 'python -m -catalog'
 
 
 **The program.**
